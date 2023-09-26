@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,13 +28,8 @@ namespace AssetTracker
         public string Location { get; set; }
         public double Price { get; set; }
         public string Currency { get; set; }
-
         public DateTime PurchaseDate { get; set; }
 
-        public void RunOption(char keyInput)
-        {
-
-        }
         public static void AddAsset(List<Asset> assetList)
         {
             Program.Print("\n What type of asset is this?  ", CC.Cyan);
@@ -45,11 +41,23 @@ namespace AssetTracker
                 type = Console.ReadLine().ToLower();
 
             }
-            Program.Print("\n What brand is it?  ", CC.Cyan);                        string brand = Console.ReadLine();
-            Program.Print("\n Which model is it?  ", CC.Cyan);                       string model = Console.ReadLine();
-            Program.Print("\n Which country is the office located in?  ", CC.Cyan);  string location = Console.ReadLine();
-            Program.Print("\n How much did it cost in US$?  ", CC.Cyan);             double price = Convert.ToDouble(Console.ReadLine());
-            Program.Print("\n Enter the purchase date (yyyy-MM-dd):  ", CC.Cyan);    DateTime purchaseDate;
+            Program.Print("\n What brand is it?  ", CC.Cyan);                        
+            string brand = Console.ReadLine();
+            Program.Print("\n Which model is it?  ", CC.Cyan);                       
+            string model = Console.ReadLine();
+            Program.Print("\n Which country is the office located in?  ", CC.Cyan);  
+            string location = Console.ReadLine();
+            Program.Print("\n What was the price in US$?  ", CC.Cyan);
+            double price;
+            while (true)
+            {
+                string priceInput = Console.ReadLine();
+                if (double.TryParse(priceInput, out price)) break;
+                else Program.Print("\n Invalid price format. Please enter a valid number. ", CC.DarkRed);
+            }
+
+            Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);   
+            DateTime purchaseDate;
 
             while (true)
             {
@@ -71,10 +79,24 @@ namespace AssetTracker
         }
         public static void DisplayAssets(List<Asset> assetList)
         {
-            foreach (Asset asset in assetList)
+            if (assetList.Count == 0)
             {
-                Program.Print($"\n {asset.Type.PadRight(20)}{asset.Brand.PadRight(20)}{asset.Model.PadRight(20)}{asset.Location.PadRight(20)}{asset.Price.ToString().PadRight(20)}{asset.PurchaseDate.ToString().PadRight(20)}  ");
+                Program.Print("\n  You haven't added anything to the Asset Tracker.\n", CC.Red);
+                return;
             }
+            else
+            {
+                Program.Print("\n     TYPE".PadRight(20) + "BRAND".PadRight(20) + "MODEL".PadRight(20) + "LOCATION".PadRight(20) + "PRICE".PadRight(20) + "PURCHASE DATE".PadRight(20), CC.DarkYellow);
+                Program.Print("\n    -------------------------------------------------------------------------------------------------------------\n", CC.DarkBlue);
+                foreach (Asset asset in assetList)
+                {
+
+                    Program.Print($"\n    {asset.Type.PadRight(15)}{asset.Brand.PadRight(20)}{asset.Model.PadRight(20)}" +
+                        $"{asset.Location.PadRight(20)}{asset.Price.ToString().PadRight(20)}{asset.PurchaseDate.ToString().PadRight(20)}  ");
+                }
+            }
+           
         }
+
     }
 }
