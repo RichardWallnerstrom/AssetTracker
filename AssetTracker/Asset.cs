@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nager.Country;
 using CC = System.ConsoleColor;
 
 
@@ -48,6 +49,13 @@ namespace AssetTracker
             string model = Console.ReadLine();
             Program.Print("\n Which country is the office located in?  ", CC.Cyan);  
             string location = Console.ReadLine();
+            while (!IsValidCountry(location))
+            {
+                Program.Print($"\n {location} is not a valid country. Please enter a valid country name. \n", CC.Red);
+                Program.Print("\n Which country is the office located in?  ", CC.Cyan);
+                location = Console.ReadLine();
+            }
+
             location = char.ToUpper(location[0]) + location.Substring(1); //Capitalize
             Program.Print("\n What was the price in US$?  ", CC.Cyan);
             double price;
@@ -108,6 +116,13 @@ namespace AssetTracker
                 }
             }
            
+        }
+        private static bool IsValidCountry(string location)
+        {
+            var countryProvider = new CountryProvider();
+            var countries = countryProvider.GetCountries();
+
+            return countries.Any(country => country.CommonName.Equals(location, StringComparison.OrdinalIgnoreCase));
         }
 
     }
