@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,12 +48,13 @@ namespace AssetTracker
             string model = Console.ReadLine();
             Program.Print("\n Which country is the office located in?  ", CC.Cyan);  
             string location = Console.ReadLine();
+            location = char.ToUpper(location[0]) + location.Substring(1); //Capitalize
             Program.Print("\n What was the price in US$?  ", CC.Cyan);
             double price;
             while (true)
             {
                 string priceInput = Console.ReadLine();
-                if (double.TryParse(priceInput, out price)) break;
+                if (double.TryParse(priceInput, out price) && price > 0) break;
                 else Program.Print("\n Invalid price format. Please enter a valid number. ", CC.DarkRed);
             }
 
@@ -79,6 +81,7 @@ namespace AssetTracker
         }
         public static void DisplayAssets(List<Asset> assetList)
         {
+            TimeSpan timeSincePurchase;
             if (assetList.Count == 0)
             {
                 Program.Print("\n  You haven't added anything to the Asset Tracker.\n", CC.Red);
@@ -90,9 +93,19 @@ namespace AssetTracker
                 Program.Print("\n    -------------------------------------------------------------------------------------------------------------\n", CC.DarkBlue);
                 foreach (Asset asset in assetList)
                 {
-
+                    ConsoleColor color;
+                    timeSincePurchase = DateTime.Now - asset.PurchaseDate;
+                    int daysSincePurchase = (int)timeSincePurchase.Days; 
+                    if (timeSincePurchase.Days >= 913 && timeSincePurchase.Days > 1005)    //3 months or less until 3 year mark
+                        color = CC.Red;
+                    else if (timeSincePurchase.Days > 913)                                  //6 months until 3 year mark
+                        color = CC.Yellow;
+                    else
+                        color = CC.White;
+                    Console.WriteLine(timeSincePurchase.Days.ToString());
+                    Console.WriteLine($"Chosen color for {asset.Brand}: {color}");
                     Program.Print($"\n    {asset.Type.PadRight(15)}{asset.Brand.PadRight(20)}{asset.Model.PadRight(20)}" +
-                        $"{asset.Location.PadRight(20)}{asset.Price.ToString().PadRight(20)}{asset.PurchaseDate.ToString().PadRight(20)}  ");
+                        $"{asset.Location.PadRight(20)}{asset.Price.ToString().PadRight(20)}{asset.PurchaseDate.ToString().PadRight(20)}  ", color);
                 }
             }
            
