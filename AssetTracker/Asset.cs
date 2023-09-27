@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nager.Country;
+using Nager.Country.Currencies;
 using CC = System.ConsoleColor;
 
 
@@ -65,6 +66,7 @@ namespace AssetTracker
 
             }
             location = char.ToUpper(location[0]) + location.Substring(1); //Capitalize
+            GetCurrency(location);
 
             // Price
             Program.Print("\n What was the price in US$?  ", CC.Cyan);
@@ -79,7 +81,6 @@ namespace AssetTracker
             // Date of purchase
             Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);   
             DateTime purchaseDate;
-
             while (true)
             {
                 if (DateTime.TryParse(Console.ReadLine(), out purchaseDate))
@@ -141,6 +142,26 @@ namespace AssetTracker
             var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
             return country?.Alpha2Code.ToString();
         }
+        private static void GetCurrency(string countryName)
+        {
+            var countryProvider = new CountryProvider();
+            var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
+
+            if (country != null)
+            {
+                var currencies = country.Currencies;
+                foreach (var currency in currencies)
+                {
+                    Program.Print($"Country: {countryName} uses {currency.Symbol} ({currency.IsoCode})");
+                }
+            }
+            else
+            {
+                Program.Print($"Country: {countryName} not found.", CC.Red);
+            }
+        }
+
+
 
     }
 }
