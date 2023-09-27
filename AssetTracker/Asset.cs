@@ -13,7 +13,7 @@ namespace AssetTracker
 {
     public class Asset
     {
-        public Asset(string type, string brand, string model, string location, double price, DateTime purchaseDate)
+        public Asset(string type, string brand, string model, string location, double price, DateTime purchaseDate, string countryCode)
         {
             Type = type;
             Brand = brand;
@@ -21,6 +21,7 @@ namespace AssetTracker
             Location = location;
             Price = price;
             PurchaseDate = purchaseDate;
+            CountryCode = countryCode;
         }
 
         public string Type { get; set; }
@@ -29,17 +30,20 @@ namespace AssetTracker
         public string Model { get; set; }
         public string Location { get; set; }
         public double Price { get; set; }
-        public string Currency { get; set; }
         public DateTime PurchaseDate { get; set; }
+        public string CountryCode { get; set; }
+        public string Currency { get; set; }
+
 
         public static void AddAsset(List<Asset> assetList)
         {
+            // Type of Asset
             Program.Print("\n What type of asset is this?  ", CC.Cyan);
             string type = Console.ReadLine().ToLower();
             while (type != "computer" && type != "phone" && type != "car")
             {
                 Program.Print($"\n {type} is not a valid asset. We currently track computers, phones and cars.  \n", CC.Red);
-                Program.Print("\n What type of asset is this?  ", CC.Cyan);
+                Program.Print("\n What type of asset is it?  ", CC.Cyan);
                 type = Console.ReadLine().ToLower();
 
             }
@@ -47,16 +51,22 @@ namespace AssetTracker
             string brand = Console.ReadLine();
             Program.Print("\n Which model is it?  ", CC.Cyan);                       
             string model = Console.ReadLine();
+
+            // Country
             Program.Print("\n Which country is the office located in?  ", CC.Cyan);  
             string location = Console.ReadLine();
-            while (!IsValidCountry(location))
+            string countryCode = GetCountryCode(location);
+            while (countryCode == null)
             {
                 Program.Print($"\n {location} is not a valid country. Please enter a valid country name. \n", CC.Red);
                 Program.Print("\n Which country is the office located in?  ", CC.Cyan);
                 location = Console.ReadLine();
-            }
+                countryCode = GetCountryCode(location);
 
+            }
             location = char.ToUpper(location[0]) + location.Substring(1); //Capitalize
+
+            // Price
             Program.Print("\n What was the price in US$?  ", CC.Cyan);
             double price;
             while (true)
@@ -66,6 +76,7 @@ namespace AssetTracker
                 else Program.Print("\n Invalid price format. Please enter a valid number. ", CC.DarkRed);
             }
 
+            // Date of purchase
             Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);   
             DateTime purchaseDate;
 
@@ -73,9 +84,9 @@ namespace AssetTracker
             {
                 if (DateTime.TryParse(Console.ReadLine(), out purchaseDate))
                 {
-                    Asset newAsset = new Asset(type, brand, model, location, price, purchaseDate);
+                    Asset newAsset = new Asset(type, brand, model, location, price, purchaseDate, countryCode);
                     assetList.Add(newAsset);
-                    Program.Print("\n  " + char.ToUpper(newAsset.Brand[0]) + newAsset.Brand.Substring(1) + " " 
+                    Program.Print("\n  " + char.ToUpper(newAsset.Brand[0]) + newAsset.Brand.Substring(1) + " " //Print: "Added asset to office in country"
                         + newAsset.Type + " added to the office in "    
                         + char.ToUpper(newAsset.Location[0]) + newAsset.Location.Substring(1) 
                         + ".\n", CC.DarkGreen);
@@ -123,6 +134,12 @@ namespace AssetTracker
             var countries = countryProvider.GetCountries();
 
             return countries.Any(country => country.CommonName.Equals(location, StringComparison.OrdinalIgnoreCase));
+        }
+        private static string GetCountryCode(string countryName)
+        {
+            var countryProvider = new CountryProvider();
+            var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
+            return country?.Alpha2Code.ToString();
         }
 
     }
