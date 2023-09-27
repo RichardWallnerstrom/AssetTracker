@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nager.Country;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,36 @@ namespace AssetTracker
             Console.Write(text);
             Console.ResetColor();
         }
+        private static bool IsValidCountry(string location)
+        {
+            var countryProvider = new CountryProvider();
+            var countries = countryProvider.GetCountries();
+
+            return countries.Any(country => country.CommonName.Equals(location, StringComparison.OrdinalIgnoreCase));
+        }
+        internal static string GetCountryCode(string countryName)
+        {
+            var countryProvider = new CountryProvider();
+            var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
+            return country?.Alpha2Code.ToString();
+        }
+        internal static void GetCurrency(string countryName)
+        {
+            var countryProvider = new CountryProvider();
+            var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
+
+            if (country != null)
+            {
+                var currency = country.Currencies.FirstOrDefault();
+                if (currency != null)
+                    Program.Print($"Country: {countryName} uses {currency.Symbol} ({currency.IsoCode})");
+                else
+                    Program.Print($"No currency information found for {countryName}.", CC.Red);
+            }
+            else
+                Program.Print($"Country: {countryName} not found.", CC.Red);
+        }
+
         internal static void Main()
         {
             List<Asset> assetList = new List<Asset>();

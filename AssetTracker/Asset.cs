@@ -56,17 +56,17 @@ namespace AssetTracker
             // Country
             Program.Print("\n Which country is the office located in?  ", CC.Cyan);  
             string location = Console.ReadLine();
-            string countryCode = GetCountryCode(location);
+            string countryCode = Program.GetCountryCode(location);
             while (countryCode == null)
             {
                 Program.Print($"\n {location} is not a valid country. Please enter a valid country name. \n", CC.Red);
                 Program.Print("\n Which country is the office located in?  ", CC.Cyan);
                 location = Console.ReadLine();
-                countryCode = GetCountryCode(location);
+                countryCode = Program.GetCountryCode(location);
 
             }
             location = char.ToUpper(location[0]) + location.Substring(1); //Capitalize
-            GetCurrency(location);
+            Program.GetCurrency(location);
 
             // Price
             Program.Print("\n What was the price in US$?  ", CC.Cyan);
@@ -129,38 +129,7 @@ namespace AssetTracker
             }
            
         }
-        private static bool IsValidCountry(string location)
-        {
-            var countryProvider = new CountryProvider();
-            var countries = countryProvider.GetCountries();
-
-            return countries.Any(country => country.CommonName.Equals(location, StringComparison.OrdinalIgnoreCase));
-        }
-        private static string GetCountryCode(string countryName)
-        {
-            var countryProvider = new CountryProvider();
-            var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
-            return country?.Alpha2Code.ToString();
-        }
-        private static void GetCurrency(string countryName)
-        {
-            var countryProvider = new CountryProvider();
-            var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
-
-            if (country != null)
-            {
-                var currencies = country.Currencies;
-                foreach (var currency in currencies)
-                {
-                    Program.Print($"Country: {countryName} uses {currency.Symbol} ({currency.IsoCode})");
-                }
-            }
-            else
-            {
-                Program.Print($"Country: {countryName} not found.", CC.Red);
-            }
-        }
-
+       
 
 
     }
