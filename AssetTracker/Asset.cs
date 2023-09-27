@@ -81,7 +81,9 @@ namespace AssetTracker
         }
         public static void DisplayAssets(List<Asset> assetList)
         {
+            ConsoleColor color;
             TimeSpan timeSincePurchase;
+            assetList = assetList.OrderBy(asset => asset.Type).ThenBy(asset => asset.PurchaseDate).ToList();
             if (assetList.Count == 0)
             {
                 Program.Print("\n  You haven't added anything to the Asset Tracker.\n", CC.Red);
@@ -89,23 +91,20 @@ namespace AssetTracker
             }
             else
             {
-                Program.Print("\n     TYPE".PadRight(20) + "BRAND".PadRight(20) + "MODEL".PadRight(20) + "LOCATION".PadRight(20) + "PRICE".PadRight(20) + "PURCHASE DATE".PadRight(20), CC.DarkYellow);
+                Program.Print("\n   TYPE".PadRight(20) + "BRAND".PadRight(20) + "MODEL".PadRight(20) + 
+                    "LOCATION".PadRight(20) + "PRICE".PadRight(20) + "PURCHASE DATE".PadRight(20), CC.Magenta);
                 Program.Print("\n    -------------------------------------------------------------------------------------------------------------\n", CC.DarkBlue);
                 foreach (Asset asset in assetList)
                 {
-                    ConsoleColor color;
                     timeSincePurchase = DateTime.Now - asset.PurchaseDate;
-                    int daysSincePurchase = (int)timeSincePurchase.Days; 
-                    if (timeSincePurchase.Days >= 913 && timeSincePurchase.Days > 1005)    //3 months or less until 3 year mark
-                        color = CC.Red;
-                    else if (timeSincePurchase.Days > 913)                                  //6 months until 3 year mark
-                        color = CC.Yellow;
-                    else
-                        color = CC.White;
-                    Console.WriteLine(timeSincePurchase.Days.ToString());
-                    Console.WriteLine($"Chosen color for {asset.Brand}: {color}");
-                    Program.Print($"\n    {asset.Type.PadRight(15)}{asset.Brand.PadRight(20)}{asset.Model.PadRight(20)}" +
-                        $"{asset.Location.PadRight(20)}{asset.Price.ToString().PadRight(20)}{asset.PurchaseDate.ToString().PadRight(20)}  ", color);
+                    if (timeSincePurchase.Days >= 913 && timeSincePurchase.Days > 1005)   //3-6 months or less until 3 year mark  
+                        color = CC.Red;         
+                    else if (timeSincePurchase.Days > 913)      //< 6 months until 3 year mark
+                        color = CC.DarkYellow;     
+                    else                                                                    
+                        color = CC.Green;
+                    Program.Print("\n".PadRight(5) + $"{asset.Type.PadRight(15)}{asset.Brand.PadRight(20)}{asset.Model.PadRight(20)}" +
+                        $"{asset.Location.PadRight(20)}{asset.Price.ToString().PadRight(20)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(20)}  ", color);
                 }
             }
            
