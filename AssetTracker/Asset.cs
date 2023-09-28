@@ -14,7 +14,8 @@ namespace AssetTracker
 {
     public class Asset
     {
-        public Asset(string type, string brand, string model, string location, decimal price, DateTime purchaseDate, string countryCode, (string symbol, string isoCode) currency)
+        public Asset(string type, string brand, string model, string location, decimal price, 
+            DateTime purchaseDate, string countryCode, (string symbol, string isoCode) currency)
         {
             Type = type;
             Brand = brand;
@@ -52,7 +53,7 @@ namespace AssetTracker
             string brand = Console.ReadLine().Trim();
             while (brand == null || brand.Length == 0)
             {
-                Program.Print("\n\nYou must type something in every field.\n");
+                Program.Print("\n\n You must type something in every field.\n", CC.Red);
                 Program.Print("\n What brand is it?  ", CC.Cyan);                        
                 brand = Console.ReadLine().Trim();
 
@@ -61,7 +62,7 @@ namespace AssetTracker
             string model = Console.ReadLine();
             while (model == null || brand.Length == 0)
             {
-                Program.Print("\n\nYou must type something in every field.\n");
+                Program.Print("\n\n You must type something in every field.\n", CC.Red);
                 Program.Print("\n What model is it?  ", CC.Cyan);                        
                 model = Console.ReadLine().Trim();
 
@@ -118,10 +119,10 @@ namespace AssetTracker
             }
             else
             {
-                Program.Print(" -----------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
-                Program.Print("\n   TYPE".PadRight(20) + "BRAND".PadRight(15) + "MODEL".PadRight(15) +
-     "LOCATION".PadRight(15) + "PRICE".PadRight(15) + "PURCHASED".PadRight(20) + "VALUE".PadRight(15), CC.Magenta);
-                Program.Print("\n\n -----------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+                Program.Print(" -------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+                Program.Print("\n   TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) +
+     "LOCATION".PadRight(17) + "PRICE".PadRight(17) + "PURCHASED".PadRight(20) + "VALUE".PadRight(17), CC.Magenta);
+                Program.Print("\n -------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
 
                 foreach (Asset asset in assetList)
                 {
@@ -135,17 +136,24 @@ namespace AssetTracker
     
                     else                                                                    
                         color = CC.Green;
-                    if (asset.Price * asset.Modifier == 0)
+                    string euroValue = $"{asset.Price.ToString()} €"; // I had some trouble formatting the string without this
+                    if (asset.Price * asset.Modifier == 0)      // If i dont have the exchange rate
                     {
-                        Program.Print("\n".PadRight(5) + $"{asset.Type.PadRight(15)}{asset.Brand.PadRight(15)}{asset.Model.PadRight(15)}" +
-                       $"{asset.Location.PadRight(15)}{asset.Price.ToString().PadRight(15)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(15)}  " +
-                       $"Unknown rate {asset.Currency.Item1.PadRight(15)}", color);
+                        Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
+                       $"{asset.Location.PadRight(17)}{euroValue.PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                       $"Unknown {asset.Currency.Item1}{asset.Currency.Item2}", color);
                     }
-                    Program.Print("\n".PadRight(5) + $"{asset.Type.PadRight(15)}{asset.Brand.PadRight(15)}{asset.Model.PadRight(15)}" +
-                        $"{asset.Location.PadRight(15)}{asset.Price.ToString().PadRight(15)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(15)}  " +
-                        $"{(asset.Price * asset.Modifier):F2} {asset.Currency.Item1.PadRight(15)}", color);
+                    else
+                    {
+                        Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
+                        $"{asset.Location.PadRight(17)}{euroValue.PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{(asset.Price * asset.Modifier):F2} {asset.Currency.Item1.PadRight(17)}", color);
+                    }
+                    
                 }
             }
         }
     }
 }
+
+// make asset.location max 15 letters.. make price accept period

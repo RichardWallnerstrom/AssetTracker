@@ -35,7 +35,6 @@ namespace AssetTracker
                 {
                     string symbol = currency.Symbol;
                     string isoCode = currency.IsoCode;
-                    Program.Print($"\n Country: {countryName} uses {currency.Symbol} ({currency.IsoCode})\n");
                     return (symbol, isoCode);
                 }
 
@@ -91,7 +90,7 @@ namespace AssetTracker
                     var matchingElements = doc.Descendants().Where(e => (string)e.Attribute("currency") == asset.Currency.Item2);
                     foreach (var element in matchingElements)
                     {
-                        string modifierString = Regex.Match(element.ToString(), @"\d+\.\d+").Value;
+                        string modifierString = Regex.Match(element.ToString(), @"\d+\.\d+").Value;   // Match number.number
                         if (decimal.TryParse(modifierString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal modifier))
                         {
                             asset.Modifier = modifier;
@@ -116,5 +115,3 @@ namespace AssetTracker
         }
     }
 }
-//TODO
-// Decimal conversion still not working in UpdateConversionMod
