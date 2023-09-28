@@ -35,19 +35,19 @@ namespace AssetTracker
                 {
                     string symbol = currency.Symbol;
                     string isoCode = currency.IsoCode;
-                    Program.Print($"Country: {countryName} uses {currency.Symbol} ({currency.IsoCode})");
+                    Program.Print($"\n Country: {countryName} uses {currency.Symbol} ({currency.IsoCode})\n");
                     return (symbol, isoCode);
                 }
 
                 else
                 {
-                    Program.Print($"No currency information found for {countryName}.", CC.Red);
+                    Program.Print($" No currency information found for {countryName}.", CC.Red);
                     return (String.Empty, String.Empty);
                 }
             }
             else
             {
-                Program.Print($"Country: {countryName} not found.", CC.Red);
+                Program.Print($" Country: {countryName} not found.", CC.Red);
                 return (String.Empty, String.Empty);
             }
         }
@@ -61,18 +61,18 @@ namespace AssetTracker
                     using (WebClient webClient = new WebClient()) 
                     {
                         webClient.DownloadFile(xmlUrl, filePath);
-                        Program.Print("Downloading up-to-date currency exchange rate data...");
-                        Program.Print("Currency exchange rate data downloaded successfully.");
+                        Program.Print("\n Downloading todays currency exchange rate data...", CC.Magenta);
+                        Program.Print("\n Currency exchange rate data downloaded successfully.\n", CC.Green);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Program.Print($"Error downloading ECB currency chart: {ex.Message}", CC.Red);
+                    Program.Print($"\n\n Error downloading ECB currency chart: {ex.Message}\n\n", CC.Red);
                 }               
             }
             else
             {
-                Program.Print("\n Currency exchange rate data is up-to-date.", CC.Green);
+                Program.Print("\n\n --> Currency exchange rate data is up-to-date <--\n\n", CC.Green);
             }
             
         }

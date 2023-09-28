@@ -53,10 +53,6 @@ namespace AssetTracker
                     Currencies.UpdateConversionModifier(assetList, filePath);
                     Asset.DisplayAssets(assetList);
                 }
-                else if (keyChar == 'p')
-                {
-
-                }
                 else Print($"\n\n          {keyChar} is not a valid option!\n\n", CC.Red);
             }   
         }

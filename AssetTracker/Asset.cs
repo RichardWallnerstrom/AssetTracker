@@ -40,17 +40,15 @@ namespace AssetTracker
 
         public static void AddAsset(List<Asset> assetList)
         {
-            // Type of Asset
-            Program.Print("\n What type of asset is this?  ", CC.Cyan);
+            Program.Print("\n What type of asset is this?  ", CC.Cyan);            // Type of Asset
             string type = Console.ReadLine().Trim().ToLower();
             while (type != "computer" && type != "phone" && type != "car")
             {
                 Program.Print($"\n {type} is not a valid asset. We currently track computers, phones and cars.  \n", CC.Red);
                 Program.Print("\n What type of asset is it?  ", CC.Cyan);
                 type = Console.ReadLine().ToLower();
-
             }
-            Program.Print("\n What brand is it?  ", CC.Cyan);                        
+            Program.Print("\n What brand is it?  ", CC.Cyan);                        //Brand
             string brand = Console.ReadLine().Trim();
             while (brand == null || brand.Length == 0)
             {
@@ -59,7 +57,7 @@ namespace AssetTracker
                 brand = Console.ReadLine().Trim();
 
             }
-            Program.Print("\n Which model is it?  ", CC.Cyan);                       
+            Program.Print("\n Which model is it?  ", CC.Cyan);                       //Model
             string model = Console.ReadLine();
             while (model == null || brand.Length == 0)
             {
@@ -68,9 +66,7 @@ namespace AssetTracker
                 model = Console.ReadLine().Trim();
 
             }
-
-            // Country
-            Program.Print("\n Which country is the office located in?  ", CC.Cyan);  
+            Program.Print("\n Which country is the office located in?  ", CC.Cyan);              // Country
             string location = Console.ReadLine();
             string countryCode = Currencies.GetCountryCode(location);
             while (countryCode == null)
@@ -80,11 +76,9 @@ namespace AssetTracker
                 location = Console.ReadLine();
                 countryCode = Currencies.GetCountryCode(location);
             }
-            location = char.ToUpper(location[0]) + location.Substring(1); //Capitalize
+            location = char.ToUpper(location[0]) + location.Substring(1);
             Currencies.GetCurrency(location);
-
-            // Price
-            Program.Print("\n What was the price in €?  ", CC.Cyan);
+            Program.Print("\n What was the price in €?  ", CC.Cyan);                            // Price
             decimal price;
             while (true)
             {
@@ -92,9 +86,7 @@ namespace AssetTracker
                 if (decimal.TryParse(priceInput, out price) && price > 0) break;
                 else Program.Print("\n Invalid price format. Please enter a valid number. ", CC.DarkRed);
             }
-
-            // Date of purchase
-            Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);   
+            Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);                    // Date of purchase
             DateTime purchaseDate;
             while (true)
             {
@@ -127,30 +119,33 @@ namespace AssetTracker
             else
             {
                 Program.Print(" -----------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
-                Program.Print("\n   TYPE".PadRight(15) + "BRAND".PadRight(15) + "MODEL".PadRight(15) +
+                Program.Print("\n   TYPE".PadRight(20) + "BRAND".PadRight(15) + "MODEL".PadRight(15) +
      "LOCATION".PadRight(15) + "PRICE".PadRight(15) + "PURCHASED".PadRight(20) + "VALUE".PadRight(15), CC.Magenta);
                 Program.Print("\n\n -----------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
 
                 foreach (Asset asset in assetList)
                 {
                     timeSincePurchase = DateTime.Now - asset.PurchaseDate;
-                    if (timeSincePurchase.Days >= 913 && timeSincePurchase.Days > 1005)   //3-6 months or less until 3 year mark  
+                    if (timeSincePurchase.Days > 1095)                           //Over due
+                        color = CC.DarkRed;
+                    else if (timeSincePurchase.Days >= 913 && timeSincePurchase.Days > 1005)   //3-6 months or less until 3 year mark  
                         color = CC.Red;         
-                    else if (timeSincePurchase.Days > 913)      //< 6 months until 3 year mark
-                        color = CC.DarkYellow;     
+                    else if (timeSincePurchase.Days > 913)                    //< 6 months until 3 year mark
+                        color = CC.DarkYellow;
+    
                     else                                                                    
                         color = CC.Green;
+                    if (asset.Price * asset.Modifier == 0)
+                    {
+                        Program.Print("\n".PadRight(5) + $"{asset.Type.PadRight(15)}{asset.Brand.PadRight(15)}{asset.Model.PadRight(15)}" +
+                       $"{asset.Location.PadRight(15)}{asset.Price.ToString().PadRight(15)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(15)}  " +
+                       $"Unknown rate {asset.Currency.Item1.PadRight(15)}", color);
+                    }
                     Program.Print("\n".PadRight(5) + $"{asset.Type.PadRight(15)}{asset.Brand.PadRight(15)}{asset.Model.PadRight(15)}" +
                         $"{asset.Location.PadRight(15)}{asset.Price.ToString().PadRight(15)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(15)}  " +
                         $"{(asset.Price * asset.Modifier):F2} {asset.Currency.Item1.PadRight(15)}", color);
                 }
             }
-           
         }
-       
-
-
     }
 }
-
-/// Symbols to fix: euro 
