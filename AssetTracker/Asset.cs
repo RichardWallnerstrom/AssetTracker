@@ -14,7 +14,7 @@ namespace AssetTracker
 {
     public class Asset
     {
-        public Asset(string type, string brand, string model, string location, double price, DateTime purchaseDate, string countryCode)
+        public Asset(string type, string brand, string model, string location, double price, DateTime purchaseDate, string countryCode, (string symbol, string isoCode) currency)
         {
             Type = type;
             Brand = brand;
@@ -23,6 +23,7 @@ namespace AssetTracker
             Price = price;
             PurchaseDate = purchaseDate;
             CountryCode = countryCode;
+            Currency = currency;
         }
 
         public string Type { get; set; }
@@ -33,7 +34,7 @@ namespace AssetTracker
         public double Price { get; set; }
         public DateTime PurchaseDate { get; set; }
         public string CountryCode { get; set; }
-        public string Currency { get; set; }
+        public (string, string) Currency { get; set; }
 
 
         public static void AddAsset(List<Asset> assetList)
@@ -63,7 +64,6 @@ namespace AssetTracker
                 Program.Print("\n Which country is the office located in?  ", CC.Cyan);
                 location = Console.ReadLine();
                 countryCode = Program.GetCountryCode(location);
-
             }
             location = char.ToUpper(location[0]) + location.Substring(1); //Capitalize
             Program.GetCurrency(location);
@@ -85,7 +85,7 @@ namespace AssetTracker
             {
                 if (DateTime.TryParse(Console.ReadLine(), out purchaseDate))
                 {
-                    Asset newAsset = new Asset(type, brand, model, location, price, purchaseDate, countryCode);
+                    Asset newAsset = new Asset(type, brand, model, location, price, purchaseDate, countryCode, Program.GetCurrency(location));
                     assetList.Add(newAsset);
                     Program.Print("\n  " + char.ToUpper(newAsset.Brand[0]) + newAsset.Brand.Substring(1) + " " //Print: "Added asset to office in country"
                         + newAsset.Type + " added to the office in "    
@@ -112,7 +112,7 @@ namespace AssetTracker
             else
             {
                 Program.Print("\n   TYPE".PadRight(20) + "BRAND".PadRight(20) + "MODEL".PadRight(20) + 
-                    "LOCATION".PadRight(20) + "PRICE".PadRight(20) + "PURCHASE DATE".PadRight(20), CC.Magenta);
+                    "LOCATION".PadRight(20) + "PRICE".PadRight(20) + "PURCHASE DATE".PadRight(20) + "VALUE".PadRight(20), CC.Magenta);
                 Program.Print("\n    -------------------------------------------------------------------------------------------------------------\n", CC.DarkBlue);
                 foreach (Asset asset in assetList)
                 {
@@ -124,7 +124,8 @@ namespace AssetTracker
                     else                                                                    
                         color = CC.Green;
                     Program.Print("\n".PadRight(5) + $"{asset.Type.PadRight(15)}{asset.Brand.PadRight(20)}{asset.Model.PadRight(20)}" +
-                        $"{asset.Location.PadRight(20)}{asset.Price.ToString().PadRight(20)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(20)}  ", color);
+                        $"{asset.Location.PadRight(20)}{asset.Price.ToString().PadRight(20)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(20)}  " +
+                        $"{asset.Currency.Item2} {asset.Currency.Item1.PadRight(20)}", color);
                 }
             }
            
