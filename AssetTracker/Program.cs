@@ -45,9 +45,12 @@ namespace AssetTracker
                 }
                 else if (keyChar == 'd')
                 {
-                    string xmlFilePath = "eurofxref-daily.xml";
-                    Currencies.DownloadCurrencyXml(xmlFilePath);
                     Asset.DisplayAssets(assetList);
+                }
+                else if (keyChar == 'p')
+                {
+                    string xmlFilePath = "eurofxref-daily.xml";
+                    Currencies.DownloadOrLoad(xmlFilePath);
                 }
                 else Print($"\n\n          {keyChar} is not a valid option!\n\n", CC.Red);
             }   

@@ -46,14 +46,14 @@ namespace AssetTracker
                 return (String.Empty, String.Empty);
             }
         }
-        internal static void DownloadCurrencyXml(string filePath)
+        internal static void DownloadOrLoad(string filePath)
         {
-            string xmlUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
-            if (!IsXmlUpToDate(filePath))
+            if (!File.Exists(filePath) || !IsXmlUpToDate(filePath))
             {
+                string xmlUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
                 try
                 {
-                    using (WebClient webClient = new WebClient())
+                    using (WebClient webClient = new WebClient())  //Save
                     {
                         webClient.DownloadFile(xmlUrl, filePath);
                         Console.WriteLine("Downloading up-to-date currency exchange rate data...");
@@ -66,8 +66,10 @@ namespace AssetTracker
                 }
                 
             }
-            else
+            else    //Load
             {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(filePath);
                 Console.WriteLine("Currency exchange rate data is up-to-date.");
             }
             
@@ -79,12 +81,8 @@ namespace AssetTracker
             else
             {
                 DateTime lastModifiedDate = File.GetLastWriteTime(filePath);
-                return lastModifiedDate == DateTime.Now.Date;
+                return lastModifiedDate.Date == DateTime.Now.Date;
             }
-        }
-        internal static void VerifyXml(string filePath)
-        {
-           
         }
     }
 }
