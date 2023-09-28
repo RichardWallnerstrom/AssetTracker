@@ -29,9 +29,9 @@ namespace AssetTracker
             while (true)
             {
                 Print("\n Press a desired key to select an option.\n\n", CC.Blue, CC.Black);
-                Print(  " Press \"A\" to add an Asset\n" +
+                Print(" Press \"A\" to add an Asset\n" +
                         " Press \"D\" to display Assets\n" +
-                        " Press \"Q\" to quit\n", CC.Cyan);     
+                        " Press \"Q\" to quit\n", CC.Cyan);
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Hide the key from the console
                 char keyChar = char.ToLower(keyInfo.KeyChar);
                 if (keyChar == 'q')
@@ -39,8 +39,16 @@ namespace AssetTracker
                     Print("\nExiting application...\n", CC.Red);
                     break;
                 }
-                else if (keyChar == 'a') Asset.AddAsset(assetList);
-                else if (keyChar == 'd') Asset.DisplayAssets(assetList);
+                else if (keyChar == 'a')
+                {
+                    Asset.AddAsset(assetList);
+                }
+                else if (keyChar == 'd')
+                {
+                    string xmlFilePath = "eurofxref-daily.xml";
+                    Currencies.DownloadCurrencyXml(xmlFilePath);
+                    Asset.DisplayAssets(assetList);
+                }
                 else Print($"\n\n          {keyChar} is not a valid option!\n\n", CC.Red);
             }   
         }

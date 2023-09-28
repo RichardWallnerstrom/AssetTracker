@@ -46,18 +46,31 @@ namespace AssetTracker
                 return (String.Empty, String.Empty);
             }
         }
-        internal static void DownloadCurrencyXml()
+        internal static void DownloadCurrencyXml(string filePath)
         {
             string xmlUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
-            try
+            if (!IsXmlUpToDate(filePath))
             {
-                using (WebClient webClient = new WebClient())
-                webClient.DownloadFile(xmlUrl, "ecb-xml-data.xml");
+                try
+                {
+                    using (WebClient webClient = new WebClient())
+                    {
+                        webClient.DownloadFile(xmlUrl, filePath);
+                        Console.WriteLine("Downloading up-to-date currency exchange rate data...");
+                        Console.WriteLine("Currency exchange rate data downloaded successfully.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error downloading ECB currency chart: {ex.Message}");
+                }
+                
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error downloading ECB currency chart: {ex.Message}");
+                Console.WriteLine("Currency exchange rate data is up-to-date.");
             }
+            
         }
         internal static bool IsXmlUpToDate(string filePath)
         {
@@ -68,6 +81,10 @@ namespace AssetTracker
                 DateTime lastModifiedDate = File.GetLastWriteTime(filePath);
                 return lastModifiedDate == DateTime.Now.Date;
             }
+        }
+        internal static void VerifyXml(string filePath)
+        {
+           
         }
     }
 }
