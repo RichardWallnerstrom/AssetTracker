@@ -89,7 +89,7 @@ namespace AssetTracker
                     string modifierString = Regex.Match(element.ToString(), @"\d+\.\d+").Value;
                     Console.WriteLine(modifierString);
                     Console.WriteLine(modifierString.GetType());
-                    if (decimal.TryParse(modifierString, out decimal modifier))
+                    if (decimal.TryParse(modifierString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal modifier))
                     {
                         asset.Modifier = Math.Round(modifier, 3);
                         Console.WriteLine(asset.Modifier);
