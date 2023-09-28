@@ -24,6 +24,7 @@ namespace AssetTracker
 
         internal static void Main()
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             List<Asset> assetList = new List<Asset>();
             Print(" ---------------------------------\n | ", CC.DarkBlue);
             Print(" Welcome to the AssetTracker ", CC.DarkYellow);

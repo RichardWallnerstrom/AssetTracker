@@ -138,3 +138,5 @@ namespace AssetTracker
 
     }
 }
+
+/// Symbols to fix: euro 
