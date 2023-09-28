@@ -42,7 +42,7 @@ namespace AssetTracker
         {
             // Type of Asset
             Program.Print("\n What type of asset is this?  ", CC.Cyan);
-            string type = Console.ReadLine().ToLower();
+            string type = Console.ReadLine().Trim().ToLower();
             while (type != "computer" && type != "phone" && type != "car")
             {
                 Program.Print($"\n {type} is not a valid asset. We currently track computers, phones and cars.  \n", CC.Red);
@@ -50,10 +50,24 @@ namespace AssetTracker
                 type = Console.ReadLine().ToLower();
 
             }
-            Program.Print("\n What brand is it?  ", CC.Cyan);              // TODO. Make sure brand and model != null          
-            string brand = Console.ReadLine();
+            Program.Print("\n What brand is it?  ", CC.Cyan);                        
+            string brand = Console.ReadLine().Trim();
+            while (brand == null || brand.Length == 0)
+            {
+                Program.Print("\n\nYou must type something in every field.\n");
+                Program.Print("\n What brand is it?  ", CC.Cyan);                        
+                brand = Console.ReadLine().Trim();
+
+            }
             Program.Print("\n Which model is it?  ", CC.Cyan);                       
             string model = Console.ReadLine();
+            while (model == null || brand.Length == 0)
+            {
+                Program.Print("\n\nYou must type something in every field.\n");
+                Program.Print("\n What model is it?  ", CC.Cyan);                        
+                model = Console.ReadLine().Trim();
+
+            }
 
             // Country
             Program.Print("\n Which country is the office located in?  ", CC.Cyan);  

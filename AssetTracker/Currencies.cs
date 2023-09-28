@@ -17,13 +17,13 @@ namespace AssetTracker
 {
     internal class Currencies
     {
-        internal static string GetCountryCode(string countryName)
+        internal static string GetCountryCode(string countryName)     // Using Nager.Country to find information about countries
         {
             var countryProvider = new CountryProvider();
             var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
             return country?.Alpha2Code.ToString();
         }
-        internal static (string Symbol, string Currency) GetCurrency(string countryName)
+        internal static (string Symbol, string Currency) GetCurrency(string countryName)  // Returning as a tuple maybe not the best idea in hindsight
         {
             var countryProvider = new CountryProvider();
             var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
@@ -58,22 +58,21 @@ namespace AssetTracker
                 string xmlUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
                 try
                 {
-                    using (WebClient webClient = new WebClient())  //Save
+                    using (WebClient webClient = new WebClient()) 
                     {
                         webClient.DownloadFile(xmlUrl, filePath);
-                        Console.WriteLine("Downloading up-to-date currency exchange rate data...");
-                        Console.WriteLine("Currency exchange rate data downloaded successfully.");
+                        Program.Print("Downloading up-to-date currency exchange rate data...");
+                        Program.Print("Currency exchange rate data downloaded successfully.");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error downloading ECB currency chart: {ex.Message}");
-                }
-                
+                    Program.Print($"Error downloading ECB currency chart: {ex.Message}", CC.Red);
+                }               
             }
             else
             {
-                Console.WriteLine("Currency exchange rate data is up-to-date.");
+                Program.Print("\n Currency exchange rate data is up-to-date.", CC.Green);
             }
             
         }
