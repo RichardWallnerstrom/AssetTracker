@@ -49,7 +49,7 @@ namespace AssetTracker
                 type = Console.ReadLine().ToLower();
 
             }
-            Program.Print("\n What brand is it?  ", CC.Cyan);                        
+            Program.Print("\n What brand is it?  ", CC.Cyan);              // TODO. Make sure brand and model != null          
             string brand = Console.ReadLine();
             Program.Print("\n Which model is it?  ", CC.Cyan);                       
             string model = Console.ReadLine();
@@ -111,8 +111,11 @@ namespace AssetTracker
             }
             else
             {
+                Program.Print(" -----------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
                 Program.Print("\n   TYPE".PadRight(15) + "BRAND".PadRight(15) + "MODEL".PadRight(15) +
      "LOCATION".PadRight(15) + "PRICE".PadRight(15) + "PURCHASED".PadRight(20) + "VALUE".PadRight(15), CC.Magenta);
+                Program.Print("\n\n -----------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+
                 foreach (Asset asset in assetList)
                 {
                     timeSincePurchase = DateTime.Now - asset.PurchaseDate;

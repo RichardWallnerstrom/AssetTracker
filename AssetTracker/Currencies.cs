@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Net;
+using System.Xml;
 using CC = System.ConsoleColor;
 namespace AssetTracker
 {
@@ -42,7 +45,29 @@ namespace AssetTracker
                 Program.Print($"Country: {countryName} not found.", CC.Red);
                 return (String.Empty, String.Empty);
             }
-
+        }
+        internal static void DownloadCurrencyXml()
+        {
+            string xmlUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
+            try
+            {
+                using (WebClient webClient = new WebClient())
+                webClient.DownloadFile(xmlUrl, "ecb-xml-data.xml");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error downloading ECB currency chart: {ex.Message}");
+            }
+        }
+        internal static bool IsXmlUpToDate(string filePath)
+        {
+            if (!File.Exists(filePath))
+                return false;
+            else
+            {
+                DateTime lastModifiedDate = File.GetLastWriteTime(filePath);
+                return lastModifiedDate == DateTime.Now.Date;
+            }
         }
     }
 }
