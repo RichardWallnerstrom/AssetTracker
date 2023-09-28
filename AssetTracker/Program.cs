@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 using CC = System.ConsoleColor;
 
 namespace AssetTracker
@@ -51,6 +53,8 @@ namespace AssetTracker
                 {
                     string xmlFilePath = "eurofxref-daily.xml";
                     Currencies.DownloadOrLoad(xmlFilePath);
+                    Currencies.UpdateConversionModifier(assetList, xmlFilePath);
+
                 }
                 else Print($"\n\n          {keyChar} is not a valid option!\n\n", CC.Red);
             }   

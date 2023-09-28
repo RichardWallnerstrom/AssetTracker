@@ -8,6 +8,10 @@ using System.IO;
 using System.Net;
 using System.Xml;
 using CC = System.ConsoleColor;
+using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+
 namespace AssetTracker
 {
     internal class Currencies
@@ -68,11 +72,24 @@ namespace AssetTracker
             }
             else    //Load
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filePath);
                 Console.WriteLine("Currency exchange rate data is up-to-date.");
             }
             
+        }
+        internal static void UpdateConversionModifier(List<Asset> assetList, string filePath)
+        {
+            XDocument doc = XDocument.Load(filePath); 
+            
+
+            foreach (Asset asset in assetList)
+            {
+                var matchingElements = doc.Descendants()
+            .Where(e => (string)e.Attribute("currency") == asset.Currency.Item2);
+                foreach (var element in matchingElements)
+                {
+                    Console.WriteLine(element);
+                }
+            }
         }
         internal static bool IsXmlUpToDate(string filePath)
         {
