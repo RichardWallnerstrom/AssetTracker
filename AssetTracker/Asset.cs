@@ -35,7 +35,7 @@ namespace AssetTracker
         public DateTime PurchaseDate { get; set; }
         public string CountryCode { get; set; }
         public (string, string) Currency { get; set; }
-        public double Modifier { get; set; }
+        public decimal Modifier { get; set; }
 
 
         public static void AddAsset(List<Asset> assetList)

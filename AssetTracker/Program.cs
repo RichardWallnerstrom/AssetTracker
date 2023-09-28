@@ -52,7 +52,7 @@ namespace AssetTracker
                 else if (keyChar == 'p')
                 {
                     string xmlFilePath = "eurofxref-daily.xml";
-                    Currencies.DownloadOrLoad(xmlFilePath);
+                    Currencies.DownloadXml(xmlFilePath);
                     Currencies.UpdateConversionModifier(assetList, xmlFilePath);
 
                 }

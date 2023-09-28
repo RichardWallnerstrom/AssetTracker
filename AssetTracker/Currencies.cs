@@ -10,6 +10,7 @@ using System.Xml;
 using CC = System.ConsoleColor;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace AssetTracker
@@ -50,7 +51,7 @@ namespace AssetTracker
                 return (String.Empty, String.Empty);
             }
         }
-        internal static void DownloadOrLoad(string filePath)
+        internal static void DownloadXml(string filePath)
         {
             if (!File.Exists(filePath) || !IsXmlUpToDate(filePath))
             {
@@ -70,7 +71,7 @@ namespace AssetTracker
                 }
                 
             }
-            else    //Load
+            else
             {
                 Console.WriteLine("Currency exchange rate data is up-to-date.");
             }
@@ -78,16 +79,26 @@ namespace AssetTracker
         }
         internal static void UpdateConversionModifier(List<Asset> assetList, string filePath)
         {
-            XDocument doc = XDocument.Load(filePath); 
-            
+            XDocument doc = XDocument.Load(filePath);
 
             foreach (Asset asset in assetList)
             {
-                var matchingElements = doc.Descendants()
-            .Where(e => (string)e.Attribute("currency") == asset.Currency.Item2);
+                var matchingElements = doc.Descendants().Where(e => (string)e.Attribute("currency") == asset.Currency.Item2);
                 foreach (var element in matchingElements)
                 {
-                    Console.WriteLine(element);
+                    string modifierString = Regex.Match(element.ToString(), @"\d+\.\d+").Value;
+                    Console.WriteLine(modifierString);
+                    Console.WriteLine(modifierString.GetType());
+                    asset.Modifier = Convert.ToDecimal(modifierString);
+                    decimal.TryParse(modifierString, CultureInfo.InvariantCulture);
+                    {
+                        asset.Modifier = Math.Round(modifier, 3);
+                        Console.WriteLine(asset.Modifier);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error parsing modifierString: {modifierString}");
+                    }*/
                 }
             }
         }
@@ -103,3 +114,5 @@ namespace AssetTracker
         }
     }
 }
+//TODO
+// Decimal conversion still not working in UpdateConversionMod
