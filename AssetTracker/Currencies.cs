@@ -83,20 +83,24 @@ namespace AssetTracker
 
             foreach (Asset asset in assetList)
             {
-                var matchingElements = doc.Descendants().Where(e => (string)e.Attribute("currency") == asset.Currency.Item2);
-                foreach (var element in matchingElements)
+                if (asset.Currency.Item2 == "EUR")
                 {
-                    string modifierString = Regex.Match(element.ToString(), @"\d+\.\d+").Value;
-                    Console.WriteLine(modifierString);
-                    Console.WriteLine(modifierString.GetType());
-                    if (decimal.TryParse(modifierString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal modifier))
+                    asset.Modifier = 1;
+                }
+                else
+                {
+                    var matchingElements = doc.Descendants().Where(e => (string)e.Attribute("currency") == asset.Currency.Item2);
+                    foreach (var element in matchingElements)
                     {
-                        asset.Modifier = Math.Round(modifier, 3);
-                        Console.WriteLine(asset.Modifier);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Error parsing modifierString: {modifierString}");
+                        string modifierString = Regex.Match(element.ToString(), @"\d+\.\d+").Value;
+                        if (decimal.TryParse(modifierString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal modifier))
+                        {
+                            asset.Modifier = modifier;
+                        }
+                        else
+                        {
+                            Program.Print($"Error parsing modifierString: {modifierString}", CC.Red);
+                        }
                     }
                 }
             }

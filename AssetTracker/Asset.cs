@@ -14,7 +14,7 @@ namespace AssetTracker
 {
     public class Asset
     {
-        public Asset(string type, string brand, string model, string location, double price, DateTime purchaseDate, string countryCode, (string symbol, string isoCode) currency)
+        public Asset(string type, string brand, string model, string location, decimal price, DateTime purchaseDate, string countryCode, (string symbol, string isoCode) currency)
         {
             Type = type;
             Brand = brand;
@@ -31,7 +31,7 @@ namespace AssetTracker
         
         public string Model { get; set; }
         public string Location { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public DateTime PurchaseDate { get; set; }
         public string CountryCode { get; set; }
         public (string, string) Currency { get; set; }
@@ -70,12 +70,12 @@ namespace AssetTracker
             Currencies.GetCurrency(location);
 
             // Price
-            Program.Print("\n What was the price in US$?  ", CC.Cyan);
-            double price;
+            Program.Print("\n What was the price in €?  ", CC.Cyan);
+            decimal price;
             while (true)
             {
                 string priceInput = Console.ReadLine();
-                if (double.TryParse(priceInput, out price) && price > 0) break;
+                if (decimal.TryParse(priceInput, out price) && price > 0) break;
                 else Program.Print("\n Invalid price format. Please enter a valid number. ", CC.DarkRed);
             }
 
@@ -128,7 +128,7 @@ namespace AssetTracker
                         color = CC.Green;
                     Program.Print("\n".PadRight(5) + $"{asset.Type.PadRight(15)}{asset.Brand.PadRight(15)}{asset.Model.PadRight(15)}" +
                         $"{asset.Location.PadRight(15)}{asset.Price.ToString().PadRight(15)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(15)}  " +
-                        $"{asset.Currency.Item2} {asset.Currency.Item1.PadRight(15)}", color);
+                        $"{(asset.Price * asset.Modifier):F2} {asset.Currency.Item1.PadRight(15)}", color);
                 }
             }
            

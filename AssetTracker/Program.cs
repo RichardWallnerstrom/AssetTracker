@@ -36,6 +36,7 @@ namespace AssetTracker
                         " Press \"Q\" to quit\n", CC.Cyan);
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Hide the key from the console
                 char keyChar = char.ToLower(keyInfo.KeyChar);
+                string xmlFilePath = "eurofxref-daily.xml";
                 if (keyChar == 'q')
                 {
                     Print("\nExiting application...\n", CC.Red);
@@ -47,13 +48,12 @@ namespace AssetTracker
                 }
                 else if (keyChar == 'd')
                 {
+                    Currencies.DownloadXml(xmlFilePath);
+                    Currencies.UpdateConversionModifier(assetList, xmlFilePath);
                     Asset.DisplayAssets(assetList);
                 }
                 else if (keyChar == 'p')
                 {
-                    string xmlFilePath = "eurofxref-daily.xml";
-                    Currencies.DownloadXml(xmlFilePath);
-                    Currencies.UpdateConversionModifier(assetList, xmlFilePath);
 
                 }
                 else Print($"\n\n          {keyChar} is not a valid option!\n\n", CC.Red);
