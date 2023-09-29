@@ -137,18 +137,18 @@ namespace AssetTracker
     
                     else                                                                    
                         color = CC.Green;
-                    string euroValue = $"{asset.Price.ToString()} €"; // I had some trouble formatting the string without this
+                    decimal totalValue = asset.Price * asset.Modifier;
                     if (asset.Price * asset.Modifier == 0)      // If i dont have the exchange rate
                     {
                         Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                       $"{Program.Truncate(asset.Location).PadRight(17)}{euroValue.PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{Program.Truncate(asset.Location).PadRight(17)}{Program.TruncateNumber(asset.Price.ToString()):F2} {" €".PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
                        $"Unknown {asset.Currency.Item1} ({asset.Currency.Item2})\n", color);
                     }
                     else
                     {
                         Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                        $"{Program.Truncate(asset.Location).PadRight(17)}{euroValue.PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
-                        $"{(asset.Price * asset.Modifier):F2} {asset.Currency.Item1.PadRight(17)}\n", color);
+                        $"{Program.Truncate(asset.Location).PadRight(17)}{Program.TruncateNumber(asset.Price.ToString()):F2} {" €".PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{Program.TruncateNumber((asset.Price * asset.Modifier).ToString())} {asset.Currency.Item1.PadRight(17)}\n", color);
                     }
                     
                 }
