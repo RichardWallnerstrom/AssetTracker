@@ -33,11 +33,11 @@ namespace AssetTracker
                 truncedValue = value.Split(',');
                 if (truncedValue[0].Length > 9)                 
                 {
-                    return truncedValue[0].Substring(0, truncedValue[0].Length - 9) + "," + value.Substring(value.Length - 9, 1) + " B"; // Truncate to billions
+                    return truncedValue[0].Substring(0, truncedValue[0].Length - 9) + "," + value.Substring(value.Length - 9, 1) + "B"; // Truncate to billions
                 }
                 else if (truncedValue[0].Length > 6)
                 {
-                    return truncedValue[0].Substring(0, truncedValue[0].Length - 6) + "," + value.Substring(value.Length - 6, 1) + " M"; // Truncate to millions
+                    return truncedValue[0].Substring(0, truncedValue[0].Length - 6) + "," + value.Substring(value.Length - 6, 1) + "M"; // Truncate to millions
                 }
                 else
                 {
@@ -48,11 +48,11 @@ namespace AssetTracker
             {
                 if (value.Length > 9) 
                 {
-                    return value.Substring(0, value.Length - 9) + "," + value.Substring(value.Length - 9, 1) + " B"; // Truncate to billions
+                    return value.Substring(0, value.Length - 9) + "," + value.Substring(value.Length - 9, 1) + "B"; // Truncate to billions
                 }
                 else if (value.Length > 6) // Check if there are more than 6 digits
                 {
-                    return value.Substring(0, value.Length - 6) + "," + value.Substring(value.Length - 6, 1) + " M"; // Truncate to millions
+                    return value.Substring(0, value.Length - 6) + "," + value.Substring(value.Length - 6, 1) + "M"; // Truncate to millions
                 }
                 else
                 {

@@ -120,38 +120,41 @@ namespace AssetTracker
             else
             {
                 Program.Print(" --------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
-                Program.Print("\n   TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) +
-     "LOCATION".PadRight(17) + "PRICE".PadRight(17) + "PURCHASED".PadRight(20) + "VALUE".PadRight(17), CC.Magenta);
+                Program.Print("\n   TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) + "LOCATION".PadRight(17) + 
+                    "PRICE".PadRight(17) + "PURCHASED".PadRight(20) + "VALUE".PadRight(17), CC.Magenta);
                 Program.Print("\n --------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
                 ConsoleColor color;
                 TimeSpan timeSincePurchase;
+                double threeYears = 365 * 3;
+                double month = 30;
+                decimal totalValue = 0;
                 foreach (Asset asset in assetList)
                 {
+                    totalValue += asset.Price;
                     timeSincePurchase = DateTime.Now - asset.PurchaseDate;
-                    if (timeSincePurchase.Days > 1095)                           //Over due
+                    if (timeSincePurchase.Days > threeYears)                           //Over due
                         color = CC.DarkRed;
-                    else if (timeSincePurchase.Days >= 913 && timeSincePurchase.Days > 1005)   //3-6 months or less until 3 year mark  
+                    else if (timeSincePurchase.Days >= (threeYears - (month * 3)))   //3 months or less until 3 year mark  
                         color = CC.Red;         
-                    else if (timeSincePurchase.Days > 913)                    //< 6 months until 3 year mark
+                    else if (timeSincePurchase.Days > (threeYears - (month * 6)))                    //< 6 months until 3 year mark
                         color = CC.DarkYellow;
-    
                     else                                                                    
                         color = CC.Green;
-                    decimal totalValue = asset.Price * asset.Modifier;
                     if (asset.Price * asset.Modifier == 0)      // If i dont have the exchange rate
                     {
                         Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                        $"{Program.Truncate(asset.Location).PadRight(17)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{Program.Truncate(asset.Location).PadRight(18)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(11)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
                        $"Unknown {asset.Currency.Item1} ({asset.Currency.Item2})\n", color);
                     }
                     else
                     {
                         Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                        $"{Program.Truncate(asset.Location).PadRight(17)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
-                        $"{Program.TruncateNumber((asset.Price * asset.Modifier).ToString("0.##"))} {asset.Currency.Item1.PadRight(17)}\n", color);
+                        $"{Program.Truncate(asset.Location).PadRight(18)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(11)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{Program.TruncateNumber((asset.Price * asset.Modifier).ToString("0.##"))} {asset.Currency.Item1}\n", color);
                     }
-                    
                 }
+                Program.Print("\n --------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+                Program.Print($" Total value of assets = {totalValue} €\n ");
             }
         }
     }
