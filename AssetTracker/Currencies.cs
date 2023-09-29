@@ -60,8 +60,8 @@ namespace AssetTracker
                     using (WebClient webClient = new WebClient()) 
                     {
                         webClient.DownloadFile(xmlUrl, filePath);
-                        Program.Print("\n Downloading todays currency exchange rate data...", CC.Magenta);
-                        Program.Print("\n Currency exchange rate data downloaded successfully.\n", CC.Green);
+                        Program.Print("\n Downloading todays currency exchange rate data...", CC.DarkYellow);
+                        Program.Print("\n Currency exchange rate data downloaded successfully.\n\n", CC.Green);
                     }
                 }
                 catch (Exception ex)

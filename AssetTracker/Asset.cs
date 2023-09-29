@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,18 +52,18 @@ namespace AssetTracker
             }
             Program.Print("\n What brand is it?  ", CC.Cyan);                        //Brand
             string brand = Console.ReadLine().Trim();
-            while (brand == null || brand.Length == 0)
+            while (brand == null || brand.Length == 0 || brand.Length > 14)
             {
-                Program.Print("\n\n You must type something in every field.\n", CC.Red);
+                Program.Print("\n\n You must type something in every field. Max 14 characters\n", CC.Red);
                 Program.Print("\n What brand is it?  ", CC.Cyan);                        
                 brand = Console.ReadLine().Trim();
 
             }
             Program.Print("\n Which model is it?  ", CC.Cyan);                       //Model
             string model = Console.ReadLine();
-            while (model == null || brand.Length == 0)
+            while (model == null || model.Length == 0 || model.Length > 14)
             {
-                Program.Print("\n\n You must type something in every field.\n", CC.Red);
+                Program.Print("\n\n You must type something in every field. Max 14 characters\n", CC.Red);
                 Program.Print("\n What model is it?  ", CC.Cyan);                        
                 model = Console.ReadLine().Trim();
 
@@ -84,7 +85,7 @@ namespace AssetTracker
             while (true)
             {
                 string priceInput = Console.ReadLine();
-                if (decimal.TryParse(priceInput, out price) && price > 0) break;
+                if (decimal.TryParse(priceInput.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out price) && price > 0) break;
                 else Program.Print("\n Invalid price format. Please enter a valid number. ", CC.DarkRed);
             }
             Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);                    // Date of purchase
@@ -119,10 +120,10 @@ namespace AssetTracker
             }
             else
             {
-                Program.Print(" -------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+                Program.Print(" --------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
                 Program.Print("\n   TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) +
      "LOCATION".PadRight(17) + "PRICE".PadRight(17) + "PURCHASED".PadRight(20) + "VALUE".PadRight(17), CC.Magenta);
-                Program.Print("\n -------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+                Program.Print("\n --------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
 
                 foreach (Asset asset in assetList)
                 {
@@ -140,14 +141,14 @@ namespace AssetTracker
                     if (asset.Price * asset.Modifier == 0)      // If i dont have the exchange rate
                     {
                         Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                       $"{asset.Location.PadRight(17)}{euroValue.PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
-                       $"Unknown {asset.Currency.Item1}{asset.Currency.Item2}", color);
+                       $"{Program.Truncate(asset.Location).PadRight(17)}{euroValue.PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                       $"Unknown {asset.Currency.Item1} ({asset.Currency.Item2})\n", color);
                     }
                     else
                     {
                         Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                        $"{asset.Location.PadRight(17)}{euroValue.PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
-                        $"{(asset.Price * asset.Modifier):F2} {asset.Currency.Item1.PadRight(17)}", color);
+                        $"{Program.Truncate(asset.Location).PadRight(17)}{euroValue.PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{(asset.Price * asset.Modifier):F2} {asset.Currency.Item1.PadRight(17)}\n", color);
                     }
                     
                 }
@@ -156,4 +157,3 @@ namespace AssetTracker
     }
 }
 
-// make asset.location max 15 letters.. make price accept period
