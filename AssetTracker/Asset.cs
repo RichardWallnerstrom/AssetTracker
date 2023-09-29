@@ -141,14 +141,14 @@ namespace AssetTracker
                     if (asset.Price * asset.Modifier == 0)      // If i dont have the exchange rate
                     {
                         Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                        $"{Program.Truncate(asset.Location).PadRight(17)}{Program.TruncateNumber(asset.Price.ToString()):F2} {" €".PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{Program.Truncate(asset.Location).PadRight(17)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
                        $"Unknown {asset.Currency.Item1} ({asset.Currency.Item2})\n", color);
                     }
                     else
                     {
                         Program.Print("\n".PadRight(4) + $"{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                        $"{Program.Truncate(asset.Location).PadRight(17)}{Program.TruncateNumber(asset.Price.ToString()):F2} {" €".PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
-                        $"{Program.TruncateNumber((asset.Price * asset.Modifier).ToString())} {asset.Currency.Item1.PadRight(17)}\n", color);
+                        $"{Program.Truncate(asset.Location).PadRight(17)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(17)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{Program.TruncateNumber((asset.Price * asset.Modifier).ToString("0.##"))} {asset.Currency.Item1.PadRight(17)}\n", color);
                     }
                     
                 }
