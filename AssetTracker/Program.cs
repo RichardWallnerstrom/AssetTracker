@@ -66,6 +66,7 @@ namespace AssetTracker
                         " To keep the display readable all fields will be shortened to 14 characters\n" +
                         " You can add almost any country in the world and it will find the proper country code and currency\n" +
                         " I'm using European Central Banks daily exchange rates to calculate current value\n" +
+                        " If you can't display certain currency symbols try to change your console font to: Consolas\n" +
                         " If value is displayed as \"Unknown\" its because I couldn't find the exchange rate\n", CC.DarkYellow);
                 }
                 else Print($"\n\n          {keyChar} is not a valid option!\n\n", CC.Red);

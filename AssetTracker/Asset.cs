@@ -111,8 +111,6 @@ namespace AssetTracker
         }
         public static void DisplayAssets(List<Asset> assetList)
         {
-            ConsoleColor color;
-            TimeSpan timeSincePurchase;
             assetList = assetList.OrderBy(asset => asset.Type).ThenBy(asset => asset.PurchaseDate).ToList();
             if (assetList.Count == 0)
             {
@@ -125,7 +123,8 @@ namespace AssetTracker
                 Program.Print("\n   TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) +
      "LOCATION".PadRight(17) + "PRICE".PadRight(17) + "PURCHASED".PadRight(20) + "VALUE".PadRight(17), CC.Magenta);
                 Program.Print("\n --------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
-
+                ConsoleColor color;
+                TimeSpan timeSincePurchase;
                 foreach (Asset asset in assetList)
                 {
                     timeSincePurchase = DateTime.Now - asset.PurchaseDate;

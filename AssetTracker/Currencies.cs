@@ -50,7 +50,7 @@ namespace AssetTracker
                 return (String.Empty, String.Empty);
             }
         }
-        internal static void DownloadXml(string filePath)
+        internal static void DownloadXml(string filePath)    // Check if ecb exchange data is up to date. If not download it. 
         {
             if (!File.Exists(filePath) || !IsXmlUpToDate(filePath))
             {
@@ -75,7 +75,7 @@ namespace AssetTracker
             }
             
         }
-        internal static void UpdateConversionModifier(List<Asset> assetList, string filePath)
+        internal static void UpdateConversionModifier(List<Asset> assetList, string filePath)       // Find the and update correct exchange rate depending on Country IsoCode. 
         {
             XDocument doc = XDocument.Load(filePath);
 
