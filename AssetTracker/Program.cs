@@ -62,7 +62,7 @@ namespace AssetTracker
         } 
         internal static void Main()
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.OutputEncoding = System.Text.Encoding.UTF8;     //To allow currency symbols.
             List<Asset> assetList = new List<Asset>();
             Print(" ---------------------------------\n | ", CC.DarkBlue);
             Print(" Welcome to the AssetTracker ", CC.DarkYellow);
@@ -77,22 +77,22 @@ namespace AssetTracker
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Hide the key from the console
                 char keyChar = char.ToLower(keyInfo.KeyChar);
                 string filePath = "eurofxref-daily.xml";
-                if (keyChar == 'q')
+                if (keyChar == 'q')         // Quit
                 {
                     Print("\nExiting application...\n", CC.Red);
                     break;
                 }
-                else if (keyChar == 'a')
+                else if (keyChar == 'a')       //Add asset
                 {
                     Asset.AddAsset(assetList);
                 }
-                else if (keyChar == 'd')
+                else if (keyChar == 'd')    //Display assets
                 {
                     Currencies.DownloadXml(filePath);
                     Currencies.UpdateConversionModifier(assetList, filePath);
                     Asset.DisplayAssets(assetList);
                 }
-                else if (keyChar == 'h')
+                else if (keyChar == 'h')  //Help
                 {
                     Print("\n With the Asset tracker you can save products and information about them.\n" +
                         " Display Products will display them sorted by cars, then computers and finally phones\n" +

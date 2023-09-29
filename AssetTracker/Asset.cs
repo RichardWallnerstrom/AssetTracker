@@ -69,7 +69,7 @@ namespace AssetTracker
                 model = Console.ReadLine().Trim();
 
             }
-            Program.Print("\n Which country is the office located in?  ", CC.Cyan);              // Country
+            Program.Print("\n Which country is the office located in?  ", CC.Cyan);          // Country
             string location = Console.ReadLine();
             string countryCode = Currencies.GetCountryCode(location);
             while (countryCode == null)
@@ -81,7 +81,7 @@ namespace AssetTracker
             }
             location = char.ToUpper(location[0]) + location.Substring(1);
             Currencies.GetCurrency(location);
-            Program.Print("\n What was the price in €?  ", CC.Cyan);                            // Price
+            Program.Print("\n What was the price in €?  ", CC.Cyan);                         // Price
             decimal price;
             while (true)
             {
@@ -89,7 +89,7 @@ namespace AssetTracker
                 if (decimal.TryParse(priceInput.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out price) && price > 0) break;
                 else Program.Print("\n Invalid price format. Please enter a valid number. ", CC.DarkRed);
             }
-            Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);                    // Date of purchase
+            Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);              // Date of purchase
             DateTime purchaseDate;
             while (true)
             {
