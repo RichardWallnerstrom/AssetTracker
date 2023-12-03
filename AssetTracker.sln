@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetTracker", "AssetTracker\AssetTracker.csproj", "{31B64AC6-3FA3-46DE-9288-C76306E5D59E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssetTrackerEfCore", "AssetTracker\AssetTrackerEfCore.csproj", "{31B64AC6-3FA3-46DE-9288-C76306E5D59E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
