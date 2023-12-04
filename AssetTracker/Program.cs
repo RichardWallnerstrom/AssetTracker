@@ -27,18 +27,23 @@ namespace AssetTrackerEfCore {
             string[] truncedValue;
             if (value.Contains(",")) {
                 truncedValue = value.Split(',');
-                if (truncedValue[0].Length > 9) {
-                    return truncedValue[0].Substring(0, truncedValue[0].Length - 9) + "," + value.Substring(value.Length - 9, 1) + "B"; // Truncate to billions
-                } else if (truncedValue[0].Length > 6) {
-                    return truncedValue[0].Substring(0, truncedValue[0].Length - 6) + "," + value.Substring(value.Length - 6, 1) + "M"; // Truncate to millions
+                if (truncedValue[0].Length > 9) {   // Truncate to billions
+                    return truncedValue[0].Substring(0, truncedValue[0].Length - 9) 
+                        + "," + value.Substring(value.Length - 9, 1) 
+                        + "B"; 
+                } else if (truncedValue[0].Length > 6) {    // Truncate to millions
+                    return truncedValue[0].Substring(0, truncedValue[0].Length - 6) 
+                        + "," + value.Substring(value.Length - 6, 1) 
+                        + "M"; 
                 } else {
                     return value;
                 }
             } else {  // If no comma
                 if (value.Length > 9) {
-                    return value.Substring(0, value.Length - 9) + "," + value.Substring(value.Length - 9, 1) + "B"; // Truncate to billions
-                } else if (value.Length > 6) // Check if there are more than 6 digits
-                  {
+                    return value.Substring(0, value.Length - 9) 
+                        + "," + value.Substring(value.Length - 9, 1) 
+                        + "B"; // Truncate to billions
+                } else if (value.Length > 6) { // Check if there are more than 6 digits
                     return value.Substring(0, value.Length - 6) + "," + value.Substring(value.Length - 6, 1) + "M"; // Truncate to millions
                 } else {
                     return value;
@@ -55,7 +60,7 @@ namespace AssetTrackerEfCore {
                 Print("\n Press a desired key to select an option.\n\n", CC.Blue, CC.Black);
                 Print(" Press \"A\" to add an Asset\n" +
                         " Press \"D\" to display Assets\n" +
-                        " Press \"S\" to save to Database\n" +
+                        " Press \"S\" to edit in Database\n" +
                         " Press \"H\" to display Help\n" +
                         " Press \"Q\" to Quit\n", CC.Cyan);
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Hide the key from the console
@@ -65,14 +70,13 @@ namespace AssetTrackerEfCore {
                     Print("\nExiting application...\n", CC.Red);
                     break;
                 } else if (keyChar == 'a') {
-                    Asset.AddAsset(assetList);
+                    Asset.AddAsset();
                 } else if (keyChar == 'd') {
                     Currencies.DownloadXml(filePath);
                     Currencies.UpdateConversionModifier(assetList, filePath);
-                    Asset.DisplayAssets(assetList);
-                } else if (keyChar == 's') {
-                    Asset.AddAssetsToDb(assetList);
-                    Print("\nSaving assets to database\n", CC.Red);
+                    Asset.DisplayAssets();
+                } else if (keyChar == 'e') {
+                    Asset.EditAsset();
                 } else if (keyChar == 'h') {
                     Print("\n With the Asset tracker you can save products and information about them.\n" +
                         " Display Products will display them sorted by cars, then computers and finally phones\n" +
