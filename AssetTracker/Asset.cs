@@ -71,7 +71,7 @@ namespace AssetTrackerEfCore {
                 type = Console.ReadLine().ToLower();
             }
             return type;
-        }        
+        }
         private static string setAssetBrand() {
             Program.Print("\n What brand is it?  ", CC.Cyan);                        //Brand
             string brand = Console.ReadLine().Trim();
@@ -117,7 +117,7 @@ namespace AssetTrackerEfCore {
                     Program.Print("\n Invalid price format. Please enter a valid number. ", CC.DarkRed);
             }
             return price;
-        }        
+        }
         private static DateTime setAssetPurchaseDate() {
             Program.Print("\n What date was it purchased (yyyy-MM-dd):  ", CC.Cyan);              // Date of purchase
             DateTime purchaseDate;
@@ -160,52 +160,72 @@ namespace AssetTrackerEfCore {
                 }
             }
         }
-        public static void DisplayAssets() {
+        public static void FindAsset() {
+            string searchTerm = Console.ReadLine();
             using (var context = new AssetContext()) {
-                List<Asset> assets = context.Assets.OrderBy(asset => asset.Type).ThenBy(asset => asset.PurchaseDate).ToList();
-
-                if (assets.Count == 0) {
-                    Program.Print("\n  You haven't added anything to the Asset Tracker.\n", CC.Red);
-                    return;
-                } else {
-                    Program.Print(" -------------------------------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
-                    Program.Print("\n   ID".PadRight(6) + "TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) + "LOCATION".PadRight(17) +
-                        "PRICE".PadRight(17) + "PURCHASED".PadRight(20) + "VALUE".PadRight(17), CC.Magenta);
-                    Program.Print("\n -------------------------------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
-                    ConsoleColor color;
-                    TimeSpan timeSincePurchase;
-                    double threeYears = 365 * 3;
-                    double month = 30;
-                    decimal totalValue = 0;
-                    foreach (Asset asset in assets) {
-                        totalValue += asset.Price;
-                        timeSincePurchase = DateTime.Now - asset.PurchaseDate;
-                        if (timeSincePurchase.Days > threeYears)                           //Over due
-                            color = CC.DarkRed;
-                        else if (timeSincePurchase.Days >= (threeYears - (month * 3)))   //3 months or less until 3 year mark  
-                            color = CC.Red;
-                        else if (timeSincePurchase.Days > (threeYears - (month * 6)))                    //< 6 months until 3 year mark
-                            color = CC.DarkYellow;
-                        else
-                            color = CC.Green;
-                        if (asset.Price * asset.Modifier == 0)      // If I don't have the exchange rate
-                        {
-                            Program.Print("\n".PadRight(4) + $"{asset.Id.ToString().PadRight(6)}{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                            $"{Program.Truncate(asset.Location).PadRight(18)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(11)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
-                            $"Unknown {asset.CurrencySymbol} ({asset.CurrencyCode})\n", color);
-                        } else {
-                            Program.Print("\n".PadRight(4) + $"{asset.Id.ToString().PadRight(6)}{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
-                            $"{Program.Truncate(asset.Location).PadRight(18)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(11)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
-                            $"{Program.TruncateNumber((asset.Price * asset.Modifier).ToString("0.##"))} {asset.CurrencySymbol}\n", color);
-                        }
-                    }
-                    Program.Print("\n -------------------------------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
-                    Program.Print($" Total value of assets = {totalValue} €\n ");
-                }
+                List<Asset> foundAssets = context.Assets.Where(
+                    asset =>
+                        asset.Type.Contains(searchTerm) ||
+                        asset.Brand.Contains(searchTerm) ||
+                        asset.Model.Contains(searchTerm)
+                ).ToList();
+                DisplayAssets(foundAssets);
             }
         }
-
+        public static void DisplayAssets(List<Asset> assets = null) {
+            List<Asset> assetsToBeDisplayed;
+            if (assets == null) {
+                using (var context = new AssetContext()) {
+                    assetsToBeDisplayed = context.Assets
+                        .OrderBy(asset => asset.Type)
+                        .ThenBy(asset => asset.PurchaseDate)
+                        .ToList();
+                }
+            } else {
+                assetsToBeDisplayed = assets;
+            }
+            if (assetsToBeDisplayed.Count == 0) {
+                Program.Print("\n  You haven't added anything to the Asset Tracker.\n", CC.Red);
+                return;
+            } else {
+                Program.Print(" -------------------------------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+                Program.Print("\n   ID".PadRight(6) + "TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) + "LOCATION".PadRight(17) +
+                    "PRICE".PadRight(17) + "PURCHASED".PadRight(20) + "VALUE".PadRight(17), CC.Magenta);
+                Program.Print("\n -------------------------------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+                ConsoleColor color;
+                TimeSpan timeSincePurchase;
+                double threeYears = 365 * 3;
+                double month = 30;
+                decimal totalValue = 0;
+                foreach (Asset asset in assetsToBeDisplayed) {
+                    totalValue += asset.Price;
+                    timeSincePurchase = DateTime.Now - asset.PurchaseDate;
+                    if (timeSincePurchase.Days > threeYears)                           //Over due
+                        color = CC.DarkRed;
+                    else if (timeSincePurchase.Days >= (threeYears - (month * 3)))   //3 months or less until 3 year mark  
+                        color = CC.Red;
+                    else if (timeSincePurchase.Days > (threeYears - (month * 6)))                    //< 6 months until 3 year mark
+                        color = CC.DarkYellow;
+                    else
+                        color = CC.Green;
+                    if (asset.Price * asset.Modifier == 0)      // If I don't have the exchange rate
+                    {
+                        Program.Print("\n".PadRight(4) + $"{asset.Id.ToString().PadRight(6)}{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
+                        $"{Program.Truncate(asset.Location).PadRight(18)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(11)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"Unknown {asset.CurrencySymbol} ({asset.CurrencyCode})\n", color);
+                    } else {
+                        Program.Print("\n".PadRight(4) + $"{asset.Id.ToString().PadRight(6)}{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
+                        $"{Program.Truncate(asset.Location).PadRight(18)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(11)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
+                        $"{Program.TruncateNumber((asset.Price * asset.Modifier).ToString("0.##"))} {asset.CurrencySymbol}\n", color);
+                    }
+                }
+                Program.Print("\n -------------------------------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
+                Program.Print($" Total value of assets = {totalValue} €\n ");
+            }
+        }
     }
+
 }
+
 
 

@@ -22,8 +22,7 @@ namespace AssetTrackerEfCore {
                 return value;
             return value.Length <= 14 ? value : value.Substring(0, 14);
         }
-        internal static string TruncateNumber(string value)     // If number string is long truncate to millions or billions
-        {
+        internal static string TruncateNumber(string value) {     // If number string is long truncate to millions or billions
             string[] truncedValue;
             if (value.Contains(",")) {
                 truncedValue = value.Split(',');
@@ -52,31 +51,26 @@ namespace AssetTrackerEfCore {
         }
         internal static void Main() {
             Console.OutputEncoding = System.Text.Encoding.UTF8;     //To allow currency symbols.
+            string filePath = "eurofxref-daily.xml";
             List<Asset> assetList = new List<Asset>();
-            Print(" ---------------------------------\n | ", CC.DarkBlue);
-            Print(" Welcome to the AssetTracker ", CC.DarkYellow);
-            Print(" | \n ---------------------------------\n", CC.DarkBlue);
+            PrintWelcome();
             while (true) {
-                Print("\n Press a desired key to select an option.\n\n", CC.Blue, CC.Black);
-                Print(" Press \"A\" to add an Asset\n" +
-                        " Press \"D\" to display Assets\n" +
-                        " Press \"S\" to edit in Database\n" +
-                        " Press \"H\" to display Help\n" +
-                        " Press \"Q\" to Quit\n", CC.Cyan);
+                PrintStartOptions();
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Hide the key from the console
                 char keyChar = char.ToLower(keyInfo.KeyChar);
-                string filePath = "eurofxref-daily.xml";
                 if (keyChar == 'q') {
                     Print("\nExiting application...\n", CC.Red);
-                    break;
+                    return;
                 } else if (keyChar == 'a') {
                     Asset.AddAsset();
                 } else if (keyChar == 'd') {
                     Currencies.DownloadXml(filePath);
                     Currencies.UpdateConversionModifier(assetList, filePath);
                     Asset.DisplayAssets();
-                } else if (keyChar == 'e') {
+                } else if (keyChar == 'e') { 
                     Asset.EditAsset();
+                } else if (keyChar == 'f') { 
+                    Asset.FindAsset();
                 } else if (keyChar == 'h') {
                     Print("\n With the Asset tracker you can save products and information about them.\n" +
                         " Display Products will display them sorted by cars, then computers and finally phones\n" +
@@ -90,8 +84,21 @@ namespace AssetTrackerEfCore {
                     Print($"\n\n          {keyChar} is not a valid option!\n\n", CC.Red);
             }
         }
+        private static void PrintStartOptions() {
+        Print("\n Press a desired key to select an option.\n\n", CC.Blue, CC.Black);
+        Print(" Press \"A\" to add an Asset\n" +
+                        " Press \"D\" to display Assets\n" +
+                        " Press \"E\" to edit in Database\n" +
+                        " Press \"S\" to search in Database\n" +
+                        " Press \"H\" to display Help\n" +
+                        " Press \"Q\" to Quit\n", CC.Cyan);
+        }
+        private static void PrintWelcome() {
+            Print(" ---------------------------------\n | ", CC.DarkBlue);
+            Print(" Welcome to the AssetTracker ", CC.DarkYellow);
+            Print(" | \n ---------------------------------\n", CC.DarkBlue);
+        }
     }
-
 }
 
 
