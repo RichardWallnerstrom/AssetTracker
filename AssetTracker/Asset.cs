@@ -148,19 +148,41 @@ namespace AssetTrackerEfCore {
                 if (assetToEdit == null) {
                     Program.Print($"Asset ID: {assetId} could not be found!", CC.Red);
                 } else {
-                    assetToEdit.Type = setAssetType();
-                    assetToEdit.Brand = setAssetBrand();
-                    assetToEdit.Model = setAssetModel();
-                    assetToEdit.Location = setAssetLocation();
-                    assetToEdit.Price = setAssetPrice();
-                    assetToEdit.PurchaseDate = setAssetPurchaseDate();
+                    Program.Print("What would you like to do? \n"
+                        + "Type e again to edit\n"
+                        + "Type x to delete");
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(true); //Hide the key from the console
+                    char keyChar = char.ToLower(keyInfo.KeyChar);
+                    if (keyChar == 'e') {
+                        assetToEdit.Type = setAssetType();
+                        assetToEdit.Brand = setAssetBrand();
+                        assetToEdit.Model = setAssetModel();
+                        assetToEdit.Location = setAssetLocation();
+                        assetToEdit.Price = setAssetPrice();
+                        assetToEdit.PurchaseDate = setAssetPurchaseDate();
 
-                    context.SaveChanges();
-                    Console.WriteLine("Asset updated successfully.");
+                        context.SaveChanges();
+                        Console.WriteLine("Asset updated successfully.");
+                        return;
+                    } else if (keyChar == 'x') {
+                        Program.Print("\nThis will delete the Asset from the database..." +
+                            "Press D to confirm. Press any other key to cancel", CC.Red);
+                        keyInfo = Console.ReadKey(true); 
+                        keyChar = char.ToLower(keyInfo.KeyChar);
+                        if (keyChar == 'd') {
+                            context.Assets.Remove(assetToEdit);
+                            context.SaveChanges();
+                            Program.Print("\n\nAsset removed from database!\n");
+                        } else {
+                            return;
+                        }
+                    }
+
                 }
             }
         }
         public static void FindAsset() {
+            Program.Print("What are you searching for? ");
             string searchTerm = Console.ReadLine();
             using (var context = new AssetContext()) {
                 List<Asset> foundAssets = context.Assets.Where(
@@ -170,6 +192,11 @@ namespace AssetTrackerEfCore {
                         asset.Model.Contains(searchTerm)
                 ).ToList();
                 DisplayAssets(foundAssets);
+            }
+        }
+        public static void DeleteAsset() {
+            using (var context = new AssetContext()) {
+
             }
         }
         public static void DisplayAssets(List<Asset> assets = null) {
@@ -185,11 +212,11 @@ namespace AssetTrackerEfCore {
                 assetsToBeDisplayed = assets;
             }
             if (assetsToBeDisplayed.Count == 0) {
-                Program.Print("\n  You haven't added anything to the Asset Tracker.\n", CC.Red);
+                Program.Print("\n  Could not find it in the database!\n", CC.Red);
                 return;
             } else {
                 Program.Print(" -------------------------------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
-                Program.Print("\n   ID".PadRight(6) + "TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) + "LOCATION".PadRight(17) +
+                Program.Print("\n   ID".PadRight(16) + "TYPE".PadRight(17) + "BRAND".PadRight(17) + "MODEL".PadRight(17) + "LOCATION".PadRight(17) +
                     "PRICE".PadRight(17) + "PURCHASED".PadRight(20) + "VALUE".PadRight(17), CC.Magenta);
                 Program.Print("\n -------------------------------------------------------------------------------------------------------------------------------------\n ", CC.DarkBlue);
                 ConsoleColor color;
@@ -210,11 +237,11 @@ namespace AssetTrackerEfCore {
                         color = CC.Green;
                     if (asset.Price * asset.Modifier == 0)      // If I don't have the exchange rate
                     {
-                        Program.Print("\n".PadRight(4) + $"{asset.Id.ToString().PadRight(6)}{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
+                        Program.Print("\n".PadRight(4) + $"{asset.Id.ToString().PadRight(13)}{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
                         $"{Program.Truncate(asset.Location).PadRight(18)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(11)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
                         $"Unknown {asset.CurrencySymbol} ({asset.CurrencyCode})\n", color);
                     } else {
-                        Program.Print("\n".PadRight(4) + $"{asset.Id.ToString().PadRight(6)}{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
+                        Program.Print("\n".PadRight(4) + $"{asset.Id.ToString().PadRight(13)}{asset.Type.PadRight(13)}{asset.Brand.PadRight(17)}{asset.Model.PadRight(17)}" +
                         $"{Program.Truncate(asset.Location).PadRight(18)}{Program.TruncateNumber(asset.Price.ToString("0.##"))} {" €".PadRight(11)}{asset.PurchaseDate.ToShortDateString().ToString().PadRight(17)}  " +
                         $"{Program.TruncateNumber((asset.Price * asset.Modifier).ToString("0.##"))} {asset.CurrencySymbol}\n", color);
                     }
