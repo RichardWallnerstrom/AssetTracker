@@ -13,7 +13,9 @@ namespace AssetTrackerEfCore {
                 "Server=(localdb)\\mssqllocaldb;Database=AssetDb;Trusted_Connection=True;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<Asset>().Property(a => a.Price).HasPrecision(18, 2); 
+            modelBuilder.Entity<Asset>()
+                .Property(a => a.Price)
+                .HasPrecision(18, 2); 
 
             modelBuilder.Entity<Asset>()
                 .Property(a => a.Modifier)

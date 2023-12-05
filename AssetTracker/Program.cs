@@ -23,9 +23,9 @@ namespace AssetTrackerEfCore {
                 if (keyChar == 'q') {
                     Print("\nExiting application...\n", CC.Red);
                     return;
-                } else if (keyChar == 'a') {
+                } else if (keyChar == 'a') {    //Add
                     Asset.AddAsset();
-                } else if (keyChar == 'd') {
+                } else if (keyChar == 'd') {    //Display
                     Currencies.DownloadXml(filePath);
                     using (var context = new AssetContext()) {
                         assetList = context.Assets.ToList();
@@ -33,14 +33,15 @@ namespace AssetTrackerEfCore {
                         context.SaveChanges();
                     }
                     Asset.DisplayAssets();
-                } else if (keyChar == 'e') { 
+                } else if (keyChar == 'e') {    //Edit
                     Asset.EditAsset();
-                } else if (keyChar == 's') { 
+                } else if (keyChar == 's') {    //Search
                     Asset.FindAsset();
-                } else if (keyChar == 'h') {
+                } else if (keyChar == 'h') {    //Help
                     PrintHelp();
-                } else
+                } else {
                     Print($"\n\n          {keyChar} is not a valid option!\n\n", CC.Red);
+                }
             }
         }
         internal static void Print(string text, CC fgColor = CC.White, CC bgColor = CC.Black) {
@@ -94,13 +95,13 @@ namespace AssetTrackerEfCore {
         }
         private static void PrintHelp() {
             Print("\n With the Asset tracker you can save products and information about them.\n" +
-    " Display Products will display them sorted by cars, then computers and finally phones\n" +
-    " Within each Type they will be sorted by oldest first\n" +
-    " To keep the display readable all fields will be shortened to 14 characters\n" +
-    " You can add almost any country in the world and it will find the proper country code and currency\n" +
-    " I'm using European Central Banks daily exchange rates to calculate current value\n" +
-    " If you can't display certain currency symbols try to change your console font to: Consolas\n" +
-    " If value is displayed as \"Unknown\" its because I couldn't find the exchange rate\n", CC.DarkYellow);
+                " Display Products will display them sorted by cars, then computers and finally phones\n" +
+                " Within each Type they will be sorted by oldest first\n" +
+                " To keep the display readable all fields will be shortened to 14 characters\n" +
+                " You can add almost any country in the world and it will find the proper country code and currency\n" +
+                " I'm using European Central Banks daily exchange rates to calculate current value\n" +
+                " If you can't display certain currency symbols try to change your console font to: Consolas\n" +
+                " If value is displayed as \"Unknown\" its because ECB doesn't support the currency. \n", CC.DarkYellow);
         }
         private static void PrintWelcome() {
             Print(" ---------------------------------\n | ", CC.DarkBlue);

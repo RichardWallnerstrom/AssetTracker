@@ -33,8 +33,8 @@ namespace AssetTrackerEfCore {
         public decimal Price { get; set; }
         public DateTime PurchaseDate { get; set; }
         public string CountryCode { get; set; }
-        public string CurrencySymbol { get; set; }
-        public string CurrencyCode { get; set; }
+        public string? CurrencySymbol { get; set; }
+        public string? CurrencyCode { get; set; }
         public decimal Modifier { get; set; }
 
 
@@ -84,7 +84,7 @@ namespace AssetTrackerEfCore {
         }
         private static string setAssetModel() {
             Program.Print("\n Which model is it?  ", CC.Cyan);                       //Model
-            string model = Console.ReadLine();
+            string? model = Console.ReadLine();
             while (model == null || model.Length == 0 || model.Length > 14) {
                 Program.Print("\n\n You must type something in every field. Max 14 characters\n", CC.Red);
                 Program.Print("\n What model is it?  ", CC.Cyan);
@@ -94,8 +94,8 @@ namespace AssetTrackerEfCore {
         }
         private static string setAssetLocation() {
             Program.Print("\n Which country is the office located in?  ", CC.Cyan);          // Country
-            string location = Console.ReadLine();
-            string countryCode = Currencies.GetCountryCode(location);
+            string? location = Console.ReadLine();
+            string? countryCode = Currencies.GetCountryCode(location);
             while (countryCode == null) {
                 Program.Print($"\n {location} is not a valid country. Please enter a valid country name. \n", CC.Red);
                 Program.Print("\n Which country is the office located in?  ", CC.Cyan);
@@ -146,7 +146,7 @@ namespace AssetTrackerEfCore {
                 assetToEdit = context.Assets.FirstOrDefault(asset => asset.Id == assetIdParsed);
 
                 if (assetToEdit == null) {
-                    Program.Print($"Asset ID: {assetId} could not be found!", CC.Red);
+                    Program.Print($"\nAsset ID: {assetId} could not be found!\n", CC.Red);
                 } else {
                     Program.Print("What would you like to do? \n"
                         + "Type e again to edit\n"
@@ -183,7 +183,7 @@ namespace AssetTrackerEfCore {
         }
         public static void FindAsset() {
             Program.Print("What are you searching for? ");
-            string searchTerm = Console.ReadLine();
+            string? searchTerm = Console.ReadLine();
             using (var context = new AssetContext()) {
                 List<Asset> foundAssets = context.Assets.Where(
                     asset =>
@@ -194,12 +194,7 @@ namespace AssetTrackerEfCore {
                 DisplayAssets(foundAssets);
             }
         }
-        public static void DeleteAsset() {
-            using (var context = new AssetContext()) {
-
-            }
-        }
-        public static void DisplayAssets(List<Asset> assets = null) {
+        public static void DisplayAssets(List<Asset>? assets = null) {
             List<Asset> assetsToBeDisplayed;
             if (assets == null) {
                 using (var context = new AssetContext()) {

@@ -15,8 +15,7 @@ using System.Xml.Linq;
 
 namespace AssetTrackerEfCore {
     internal class Currencies {
-        internal static string GetCountryCode(string countryName)     // Using Nager.Country to find information about countries
-        {
+        internal static string GetCountryCode(string countryName) { // Using Nager.Country to find information about countries
             var countryProvider = new CountryProvider();
             var country = countryProvider.GetCountries().FirstOrDefault(c => c.CommonName.Equals(countryName, StringComparison.OrdinalIgnoreCase));
             return country?.Alpha2Code.ToString();
@@ -39,8 +38,7 @@ namespace AssetTrackerEfCore {
             }
             return new CurrencyInfo();
         }
-        internal static void DownloadXml(string filePath)    // Check if ecb exchange data is up to date. If not download it. 
-        {
+        internal static void DownloadXml(string filePath) {  // Check if ecb exchange data is up to date. If not download it. 
             if (!File.Exists(filePath) || !IsXmlUpToDate(filePath)) {
                 string xmlUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
                 try {
@@ -58,8 +56,7 @@ namespace AssetTrackerEfCore {
             }
 
         }
-        internal static void UpdateConversionModifier(List<Asset> assetList, string filePath)       // Find the and update correct exchange rate depending on Country IsoCode. 
-        {
+        internal static void UpdateConversionModifier(List<Asset> assetList, string filePath) {    // Find the and update correct exchange rate depending on Country IsoCode. 
             XDocument doc = XDocument.Load(filePath);
 
             foreach (Asset asset in assetList) {
